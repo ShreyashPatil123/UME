@@ -29,13 +29,14 @@ TEST(SpscQueueTest, CapacityFull) {
     EXPECT_TRUE(queue.push(1));
     EXPECT_TRUE(queue.push(2));
     EXPECT_TRUE(queue.push(3));
-    EXPECT_FALSE(queue.push(4)); // Queue full (capacity - 1 usable)
+    EXPECT_TRUE(queue.push(4));
+    EXPECT_FALSE(queue.push(5)); // 5th push fails because queue of capacity 4 is full
 
     int val = 0;
     EXPECT_TRUE(queue.pop(val));
     EXPECT_EQ(val, 1);
 
-    EXPECT_TRUE(queue.push(4));
+    EXPECT_TRUE(queue.push(5));
 }
 
 TEST(SpscQueueTest, ConcurrentProducerConsumer) {

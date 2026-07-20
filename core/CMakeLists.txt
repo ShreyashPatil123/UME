@@ -17,6 +17,10 @@ target_sources(ume_core
         # Concurrency
         src/concurrency/epoch_rcu.cpp
         src/concurrency/string_interner.cpp
+
+        # Event & Journal
+        src/event/event_serializer.cpp
+        src/event/journal_writer.cpp
 )
 
 target_include_directories(ume_core
@@ -67,6 +71,8 @@ if(UME_BUILD_TESTS)
         tests/test_hazard_pointers.cpp
         tests/test_string_interner.cpp
         tests/test_event.cpp
+        tests/test_event_serializer.cpp
+        tests/test_journal_writer.cpp
     )
 
     target_link_libraries(ume_core_tests

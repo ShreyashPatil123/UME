@@ -6,6 +6,7 @@ if(UME_BUILD_BENCHMARKS)
         bench_mpsc_queue.cpp
         bench_epoch_rcu.cpp
         bench_string_interner.cpp
+        bench_journal_writer.cpp
     )
 
     target_link_libraries(ume_benchmarks

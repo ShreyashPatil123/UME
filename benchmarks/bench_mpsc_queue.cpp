@@ -17,9 +17,9 @@ static void BM_MpscQueue_Enqueue_SingleProducer(benchmark::State& state) {
     uint64_t val = 42;
 
     for (auto _ : state) {
-        if (!queue.enqueue(val)) {
+        while (!queue.enqueue(val)) {
             uint64_t out = 0;
-            queue.dequeue(out);
+            (void)queue.dequeue(out);
         }
     }
     state.SetItemsProcessed(state.iterations());
@@ -31,9 +31,9 @@ static void BM_MpscQueue_EnqueueDequeue_Pipeline(benchmark::State& state) {
     uint64_t val = 1;
 
     for (auto _ : state) {
-        queue.enqueue(val);
+        (void)queue.enqueue(val);
         uint64_t out = 0;
-        queue.dequeue(out);
+        (void)queue.dequeue(out);
     }
     state.SetItemsProcessed(state.iterations() * 2);
 }

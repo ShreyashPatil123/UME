@@ -1,0 +1,75 @@
+// event_schema.fbs
+// FlatBuffers Schema for UME Event Serialization
+// Version: 1.0.0
+
+namespace ume.event.fbs;
+
+enum EventCategory : ubyte {
+    Unknown = 0,
+    MemoryObject = 1,
+    TierMigration = 2,
+    AccessPattern = 3,
+    SystemTopology = 4,
+    Prediction = 5,
+    Advisor = 6,
+    Plugin = 7
+}
+
+enum EventPriority : ubyte {
+    Low = 0,
+    Normal = 1,
+    High = 2,
+    Critical = 3
+}
+
+table ObjectEventPayload {
+    size_bytes: uint64;
+    alignment: uint32;
+    preferred_tier: ubyte;
+}
+
+table MigrationEventPayload {
+    bytes_transferred: uint64;
+    duration_ns: uint64;
+    status_code: uint32;
+}
+
+table AccessEventPayload {
+    virtual_address: uint64;
+    access_type: ubyte;
+    access_count: uint32;
+}
+
+table SystemEventPayload {
+    capacity_bytes: uint64;
+    used_bytes: uint64;
+    metric_value: uint32;
+}
+
+union PayloadData {
+    ObjectEventPayload,
+    MigrationEventPayload,
+    AccessEventPayload,
+    SystemEventPayload
+}
+
+table EventHeader {
+    id: uint64;
+    timestamp: uint64;
+    object_id: uint64;
+    type: uint16;
+    category: EventCategory;
+    priority: EventPriority;
+    flags: uint32;
+    source_tier: uint16;
+    target_tier: uint16;
+    payload_size: uint32;
+    sequence_num: uint32;
+}
+
+table EventRecord {
+    header: EventHeader;
+    payload: PayloadData;
+}
+
+root_type EventRecord;

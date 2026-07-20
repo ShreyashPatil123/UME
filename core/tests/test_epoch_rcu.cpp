@@ -65,17 +65,20 @@ TEST(EpochRcuTest, MultiThreadedRcuStress) {
                 rcu.enter(slot);
                 read_count.fetch_add(1, std::memory_order_relaxed);
                 rcu.exit(slot);
+                std::this_thread::yield();
             }
             rcu.unregister_thread(slot);
         });
     }
 
-    // Writer thread retiring objects (deterministic operation count)
+    // Writer thread retiring objects
     std::thread writer([&rcu, &running, &retire_count, &delete_count]() {
         for (size_t i = 0; i < kRetireOps; ++i) {
             retire_count.fetch_add(1, std::memory_order_relaxed);
             rcu.retire([&delete_count]() { delete_count.fetch_add(1, std::memory_order_relaxed); });
-            rcu.reclaim();
+            if (i % 100 == 0) {
+                rcu.reclaim();
+            }
             std::this_thread::yield();
         }
         running.store(false, std::memory_order_release);

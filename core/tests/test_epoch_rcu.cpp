@@ -76,7 +76,7 @@ TEST(EpochRcuTest, MultiThreadedRcuStress) {
             retire_count.fetch_add(1, std::memory_order_relaxed);
             rcu.retire([&delete_count]() { delete_count.fetch_add(1, std::memory_order_relaxed); });
             rcu.reclaim();
-            std::this_thread::sleep_for(std::chrono::microseconds(100));
+            std::this_thread::yield();
         }
     });
 

@@ -9,6 +9,7 @@ if(UME_BUILD_BENCHMARKS)
         bench_journal_writer.cpp
         bench_replay_dispatcher.cpp
         bench_event_analysis.cpp
+        bench_scheduler_placement.cpp
     )
 
     target_link_libraries(ume_benchmarks

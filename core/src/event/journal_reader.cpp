@@ -72,7 +72,7 @@ Result<void> JournalReader::load_current_segment() noexcept {
     }
 
     const uint32_t computed_crc =
-        compute_crc32(reinterpret_cast<const uint8_t*>(&current_segment_header_), 44);
+        compute_crc32(reinterpret_cast<const uint8_t*>(&current_segment_header_), 32);
     if (computed_crc != current_segment_header_.header_crc32) {
         return Status::kJournalCorrupted;
     }
@@ -116,8 +116,8 @@ Result<void> JournalReader::read_next(Event& out_event) noexcept {
             continue;
         }
 
-        // Validate Record Header CRC32
-        const uint32_t header_crc = compute_crc32(record_ptr, 24);
+        // Validate Record Header CRC32 (first 20 bytes)
+        const uint32_t header_crc = compute_crc32(record_ptr, 20);
         if (header_crc != record_hdr.header_crc32) {
             current_offset_ += 8; // Advance 8-byte boundary
             stats_.corrupted_records_skipped++;

@@ -103,7 +103,7 @@ Result<void> JournalWriter::roll_segment_locked() noexcept {
     header.segment_id = current_segment_id_;
     header.created_timestamp = platform::monotonic_now_ns();
     header.segment_size_bytes = segment_size_bytes_;
-    header.header_crc32 = compute_crc32(reinterpret_cast<const uint8_t*>(&header), 44);
+    header.header_crc32 = compute_crc32(reinterpret_cast<const uint8_t*>(&header), 32);
 
     std::memcpy(current_mmap_.data(), &header, sizeof(JournalSegmentHeader));
     write_offset_.store(sizeof(JournalSegmentHeader), std::memory_order_release);
@@ -145,7 +145,7 @@ Result<uint64_t> JournalWriter::append(const Event& event) noexcept {
     record_hdr.sequence_num = seq;
     record_hdr.payload_crc32 =
         compute_crc32(reinterpret_cast<const uint8_t*>(&event), sizeof(Event));
-    record_hdr.header_crc32 = compute_crc32(reinterpret_cast<const uint8_t*>(&record_hdr), 24);
+    record_hdr.header_crc32 = compute_crc32(reinterpret_cast<const uint8_t*>(&record_hdr), 20);
 
     uint8_t* dst = current_mmap_.data() + offset;
     std::memcpy(dst, &record_hdr, sizeof(JournalRecordHeader));

@@ -8,6 +8,8 @@
 /// This is part of the frozen v3 architecture specification.
 
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <string_view>
 #include <type_traits>
 #include <utility>

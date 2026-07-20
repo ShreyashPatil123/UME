@@ -18,7 +18,7 @@ target_sources(ume_core
         src/concurrency/epoch_rcu.cpp
         src/concurrency/string_interner.cpp
 
-        # Event & Journal & Analysis & Scheduling & Optimization & Learning
+        # Event & Journal & Analysis & Scheduling & Optimization & Learning & Simulation
         src/event/event_serializer.cpp
         src/event/journal_writer.cpp
         src/event/journal_reader.cpp
@@ -32,6 +32,8 @@ target_sources(ume_core
         src/event/prefetch_engine.cpp
         src/event/pattern_learning.cpp
         src/event/prediction_engine.cpp
+        src/event/memory_advisor.cpp
+        src/event/digital_twin.cpp
 )
 
 target_include_directories(ume_core
@@ -98,6 +100,9 @@ if(UME_BUILD_TESTS)
         tests/test_pattern_learning.cpp
         tests/test_prediction_engine.cpp
         tests/test_m6_pipeline_integration.cpp
+        tests/test_memory_advisor.cpp
+        tests/test_digital_twin.cpp
+        tests/test_m7_pipeline_integration.cpp
     )
 
     target_link_libraries(ume_core_tests

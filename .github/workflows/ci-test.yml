@@ -49,13 +49,7 @@ jobs:
 
       - name: Configure CMake (Windows)
         if: runner.os == 'Windows'
-        run: |
-          cmake -B build \
-            -G "Visual Studio 17 2022" \
-            -A x64 \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DUME_BUILD_TESTS=ON \
-            -DUME_BUILD_BENCHMARKS=OFF
+        run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Debug -DUME_BUILD_TESTS=ON -DUME_BUILD_BENCHMARKS=OFF
 
       - name: Build Tests
         run: cmake --build build --config Debug --parallel

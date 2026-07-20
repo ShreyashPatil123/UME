@@ -88,7 +88,7 @@ Status set_current_thread_priority(ThreadPriority priority) noexcept {
     return ok ? Status::kOk : Status::kInternalError;
 #elif defined(UME_PLATFORM_LINUX)
     int policy = SCHED_OTHER;
-    struct sched_param param{};
+    struct sched_param param {};
     if (priority == ThreadPriority::kRealtime) {
         policy = SCHED_FIFO;
         param.sched_priority = 10;

@@ -45,7 +45,7 @@ namespace ume::platform {
 /// @complexity O(1), typically < 25 ns per call.
 [[nodiscard]] inline Timestamp monotonic_now_ns() noexcept {
 #if defined(UME_PLATFORM_LINUX) || defined(UME_PLATFORM_MACOS)
-    struct timespec ts{};
+    struct timespec ts {};
     #if defined(CLOCK_MONOTONIC_RAW)
     clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
     #else

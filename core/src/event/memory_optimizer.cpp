@@ -62,7 +62,6 @@ void MemoryOptimizer::record_access(ObjectId object_id, uint64_t size_bytes,
 void MemoryOptimizer::optimize_pass() noexcept {
     std::lock_guard<std::mutex> lock(mutex_);
 
-
     // 1. Age existing residency objects (temperature decay)
     for (auto& [raw_id, res] : residency_map_) {
         // Temperature decays over time

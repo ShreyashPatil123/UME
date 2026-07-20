@@ -62,6 +62,8 @@ TEST_F(OptimizerPrefetchIntegrationTest, EndToEndM5Pipeline) {
     optimizer.record_access(obj, 4096, TierClass::kRam);
     optimizer.record_access(obj, 4096, TierClass::kRam);
     optimizer.record_access(obj, 4096, TierClass::kRam);
+    optimizer.record_access(obj, 4096, TierClass::kRam);
+    optimizer.record_access(obj, 4096, TierClass::kRam);
 
     prefetcher.record_access(obj, 0x1000);
     prefetcher.record_access(obj, 0x2000);

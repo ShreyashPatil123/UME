@@ -17,7 +17,7 @@ std::vector<Recommendation> HealthAdvisorRule::analyze(const StatisticsCollector
     const MemoryStatisticsSnapshot snap = stats.snapshot();
 
     // Check high VRAM pressure
-    if (snap.peak_vram_bytes > 0) {
+    if (snap.peak_vram_bytes > 0 && snap.current_vram_bytes > 1024 * 1024) {
         const double vram_ratio = static_cast<double>(snap.current_vram_bytes) /
                                   static_cast<double>(snap.peak_vram_bytes);
         if (vram_ratio > 0.9) {
@@ -35,7 +35,7 @@ std::vector<Recommendation> HealthAdvisorRule::analyze(const StatisticsCollector
     }
 
     // Check RAM pressure
-    if (snap.peak_ram_bytes > 0) {
+    if (snap.peak_ram_bytes > 0 && snap.current_ram_bytes > 1024 * 1024) {
         const double ram_ratio =
             static_cast<double>(snap.current_ram_bytes) / static_cast<double>(snap.peak_ram_bytes);
         if (ram_ratio > 0.85) {

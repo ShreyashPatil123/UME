@@ -18,12 +18,14 @@ target_sources(ume_core
         src/concurrency/epoch_rcu.cpp
         src/concurrency/string_interner.cpp
 
-        # Event & Journal
+        # Event & Journal & Analysis
         src/event/event_serializer.cpp
         src/event/journal_writer.cpp
         src/event/journal_reader.cpp
         src/event/event_dispatcher.cpp
         src/event/replay_engine.cpp
+        src/event/memory_statistics.cpp
+        src/event/event_analyzer.cpp
 )
 
 target_include_directories(ume_core
@@ -78,6 +80,9 @@ if(UME_BUILD_TESTS)
         tests/test_journal_writer.cpp
         tests/test_event_dispatcher.cpp
         tests/test_replay_engine.cpp
+        tests/test_memory_statistics.cpp
+        tests/test_event_analyzer.cpp
+        tests/test_analysis_pipeline_integration.cpp
     )
 
     target_link_libraries(ume_core_tests

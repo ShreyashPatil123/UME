@@ -34,47 +34,47 @@ enum class Status : uint16_t {
     kOk = 0x0000,
 
     // ── Invalid Argument ──
-    kInvalidArgument = 0x0100,        ///< Generic invalid argument
-    kNullPointer = 0x0101,            ///< Unexpected null pointer
-    kOutOfRange = 0x0102,             ///< Value outside valid range
-    kInvalidState = 0x0103,           ///< Invalid state transition
-    kInvalidConfig = 0x0104,          ///< Invalid configuration value
-    kInvalidIr = 0x0105,              ///< Invalid UM-IR instruction sequence
+    kInvalidArgument = 0x0100, ///< Generic invalid argument
+    kNullPointer = 0x0101,     ///< Unexpected null pointer
+    kOutOfRange = 0x0102,      ///< Value outside valid range
+    kInvalidState = 0x0103,    ///< Invalid state transition
+    kInvalidConfig = 0x0104,   ///< Invalid configuration value
+    kInvalidIr = 0x0105,       ///< Invalid UM-IR instruction sequence
 
     // ── Resource Errors ──
-    kOutOfMemory = 0x0200,            ///< Memory allocation failed
-    kCapacityExceeded = 0x0201,       ///< Queue/buffer/store capacity exceeded
-    kBudgetExceeded = 0x0202,         ///< Performance budget exceeded
+    kOutOfMemory = 0x0200,      ///< Memory allocation failed
+    kCapacityExceeded = 0x0201, ///< Queue/buffer/store capacity exceeded
+    kBudgetExceeded = 0x0202,   ///< Performance budget exceeded
 
     // ── State Errors ──
-    kNotFound = 0x0300,               ///< Object/tier/edge not found
-    kAlreadyExists = 0x0301,          ///< Object/tier/edge already exists
-    kNotInitialized = 0x0302,         ///< Engine/module not initialized
-    kAlreadyInitialized = 0x0303,     ///< Engine/module already initialized
-    kShutdown = 0x0304,               ///< Engine is shutting down
+    kNotFound = 0x0300,           ///< Object/tier/edge not found
+    kAlreadyExists = 0x0301,      ///< Object/tier/edge already exists
+    kNotInitialized = 0x0302,     ///< Engine/module not initialized
+    kAlreadyInitialized = 0x0303, ///< Engine/module already initialized
+    kShutdown = 0x0304,           ///< Engine is shutting down
 
     // ── I/O Errors ──
-    kIoError = 0x0400,                ///< Generic I/O error
-    kJournalCorrupted = 0x0401,       ///< Journal segment CRC mismatch
-    kJournalFull = 0x0402,            ///< Journal retention limit reached
-    kSerializationError = 0x0403,     ///< Serialization/deserialization failed
-    kFileNotFound = 0x0404,           ///< File does not exist
-    kPermissionDenied = 0x0405,       ///< Insufficient permissions
+    kIoError = 0x0400,            ///< Generic I/O error
+    kJournalCorrupted = 0x0401,   ///< Journal segment CRC mismatch
+    kJournalFull = 0x0402,        ///< Journal retention limit reached
+    kSerializationError = 0x0403, ///< Serialization/deserialization failed
+    kFileNotFound = 0x0404,       ///< File does not exist
+    kPermissionDenied = 0x0405,   ///< Insufficient permissions
 
     // ── Concurrency Errors ──
-    kTimeout = 0x0500,                ///< Operation timed out
-    kContention = 0x0501,             ///< Lock contention (retry advised)
-    kEpochStalled = 0x0502,           ///< RCU epoch advancement stalled
+    kTimeout = 0x0500,      ///< Operation timed out
+    kContention = 0x0501,   ///< Lock contention (retry advised)
+    kEpochStalled = 0x0502, ///< RCU epoch advancement stalled
 
     // ── Plugin Errors ──
-    kPluginLoadFailed = 0x0600,       ///< Failed to load plugin library
-    kPluginVersionMismatch = 0x0601,  ///< Plugin ABI version mismatch
-    kPluginInitFailed = 0x0602,       ///< Plugin initialization failed
-    kPluginNotFound = 0x0603,         ///< Plugin not registered
+    kPluginLoadFailed = 0x0600,      ///< Failed to load plugin library
+    kPluginVersionMismatch = 0x0601, ///< Plugin ABI version mismatch
+    kPluginInitFailed = 0x0602,      ///< Plugin initialization failed
+    kPluginNotFound = 0x0603,        ///< Plugin not registered
 
     // ── Internal Errors ──
-    kInternalError = 0xFF00,          ///< Generic internal error (bug)
-    kUnimplemented = 0xFF01,          ///< Feature not yet implemented
+    kInternalError = 0xFF00, ///< Generic internal error (bug)
+    kUnimplemented = 0xFF01, ///< Feature not yet implemented
 };
 
 /// @brief Returns true if the status represents a successful operation.
@@ -94,36 +94,66 @@ enum class Status : uint16_t {
 ///         The returned view points to static storage and is always valid.
 [[nodiscard]] constexpr std::string_view status_name(Status s) noexcept {
     switch (s) {
-        case Status::kOk:                    return "kOk";
-        case Status::kInvalidArgument:       return "kInvalidArgument";
-        case Status::kNullPointer:           return "kNullPointer";
-        case Status::kOutOfRange:            return "kOutOfRange";
-        case Status::kInvalidState:          return "kInvalidState";
-        case Status::kInvalidConfig:         return "kInvalidConfig";
-        case Status::kInvalidIr:             return "kInvalidIr";
-        case Status::kOutOfMemory:           return "kOutOfMemory";
-        case Status::kCapacityExceeded:      return "kCapacityExceeded";
-        case Status::kBudgetExceeded:        return "kBudgetExceeded";
-        case Status::kNotFound:              return "kNotFound";
-        case Status::kAlreadyExists:         return "kAlreadyExists";
-        case Status::kNotInitialized:        return "kNotInitialized";
-        case Status::kAlreadyInitialized:    return "kAlreadyInitialized";
-        case Status::kShutdown:              return "kShutdown";
-        case Status::kIoError:               return "kIoError";
-        case Status::kJournalCorrupted:      return "kJournalCorrupted";
-        case Status::kJournalFull:           return "kJournalFull";
-        case Status::kSerializationError:    return "kSerializationError";
-        case Status::kFileNotFound:          return "kFileNotFound";
-        case Status::kPermissionDenied:      return "kPermissionDenied";
-        case Status::kTimeout:               return "kTimeout";
-        case Status::kContention:            return "kContention";
-        case Status::kEpochStalled:          return "kEpochStalled";
-        case Status::kPluginLoadFailed:      return "kPluginLoadFailed";
-        case Status::kPluginVersionMismatch: return "kPluginVersionMismatch";
-        case Status::kPluginInitFailed:      return "kPluginInitFailed";
-        case Status::kPluginNotFound:        return "kPluginNotFound";
-        case Status::kInternalError:         return "kInternalError";
-        case Status::kUnimplemented:         return "kUnimplemented";
+        case Status::kOk:
+            return "kOk";
+        case Status::kInvalidArgument:
+            return "kInvalidArgument";
+        case Status::kNullPointer:
+            return "kNullPointer";
+        case Status::kOutOfRange:
+            return "kOutOfRange";
+        case Status::kInvalidState:
+            return "kInvalidState";
+        case Status::kInvalidConfig:
+            return "kInvalidConfig";
+        case Status::kInvalidIr:
+            return "kInvalidIr";
+        case Status::kOutOfMemory:
+            return "kOutOfMemory";
+        case Status::kCapacityExceeded:
+            return "kCapacityExceeded";
+        case Status::kBudgetExceeded:
+            return "kBudgetExceeded";
+        case Status::kNotFound:
+            return "kNotFound";
+        case Status::kAlreadyExists:
+            return "kAlreadyExists";
+        case Status::kNotInitialized:
+            return "kNotInitialized";
+        case Status::kAlreadyInitialized:
+            return "kAlreadyInitialized";
+        case Status::kShutdown:
+            return "kShutdown";
+        case Status::kIoError:
+            return "kIoError";
+        case Status::kJournalCorrupted:
+            return "kJournalCorrupted";
+        case Status::kJournalFull:
+            return "kJournalFull";
+        case Status::kSerializationError:
+            return "kSerializationError";
+        case Status::kFileNotFound:
+            return "kFileNotFound";
+        case Status::kPermissionDenied:
+            return "kPermissionDenied";
+        case Status::kTimeout:
+            return "kTimeout";
+        case Status::kContention:
+            return "kContention";
+        case Status::kEpochStalled:
+            return "kEpochStalled";
+        case Status::kPluginLoadFailed:
+            return "kPluginLoadFailed";
+        case Status::kPluginVersionMismatch:
+            return "kPluginVersionMismatch";
+        case Status::kPluginInitFailed:
+            return "kPluginInitFailed";
+        case Status::kPluginNotFound:
+            return "kPluginNotFound";
+        case Status::kInternalError:
+            return "kInternalError";
+        case Status::kUnimplemented:
+            return "kUnimplemented";
     }
     return "kUnknown";
 }
@@ -161,8 +191,7 @@ public:
     /// @param status The error status. Must not be kOk.
     // NOLINTNEXTLINE(google-explicit-constructor)
     Result(Status status) noexcept : status_(status) {
-        assert(status != Status::kOk &&
-               "Cannot construct error Result with kOk status");
+        assert(status != Status::kOk && "Cannot construct error Result with kOk status");
     }
 
     /// @brief Returns true if the result contains a value.
@@ -254,12 +283,12 @@ private:
 ///     // Only reached if append() returned kOk.
 /// @endcode
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define UME_RETURN_IF_ERROR(expr)                      \
-    do {                                               \
-        auto ume_status_macro_tmp_ = (expr);           \
-        if (::ume::is_error(ume_status_macro_tmp_)) {  \
-            return ume_status_macro_tmp_;               \
-        }                                              \
+#define UME_RETURN_IF_ERROR(expr)                     \
+    do {                                              \
+        auto ume_status_macro_tmp_ = (expr);          \
+        if (::ume::is_error(ume_status_macro_tmp_)) { \
+            return ume_status_macro_tmp_;             \
+        }                                             \
     } while (false)
 
 /// @brief Assign a Result's value or return early if it's an error.
@@ -270,11 +299,11 @@ private:
 ///     // obj is now the unwrapped value.
 /// @endcode
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define UME_ASSIGN_OR_RETURN(lhs, expr)                                       \
-    auto UME_CONCAT_(ume_result_macro_tmp_, __LINE__) = (expr);               \
-    if (!UME_CONCAT_(ume_result_macro_tmp_, __LINE__).ok()) {                 \
-        return UME_CONCAT_(ume_result_macro_tmp_, __LINE__).status();         \
-    }                                                                          \
+#define UME_ASSIGN_OR_RETURN(lhs, expr)                               \
+    auto UME_CONCAT_(ume_result_macro_tmp_, __LINE__) = (expr);       \
+    if (!UME_CONCAT_(ume_result_macro_tmp_, __LINE__).ok()) {         \
+        return UME_CONCAT_(ume_result_macro_tmp_, __LINE__).status(); \
+    }                                                                 \
     lhs = std::move(UME_CONCAT_(ume_result_macro_tmp_, __LINE__)).value()
 
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)

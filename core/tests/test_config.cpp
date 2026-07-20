@@ -40,7 +40,7 @@ TEST(ConfigTest, Validate_DefaultTestConfig_IsValid) {
 }
 
 TEST(ConfigTest, Validate_DefaultConfig_IsValid) {
-    Config config{};  // Default-constructed config should be valid
+    Config config{}; // Default-constructed config should be valid
     EXPECT_TRUE(is_ok(config.validate()));
 }
 
@@ -58,13 +58,13 @@ TEST(ConfigTest, Validate_ShardCountZero_ReturnsInvalidConfig) {
 
 TEST(ConfigTest, Validate_SegmentSizeTooSmall_ReturnsInvalidConfig) {
     Config config = Config::default_test_config();
-    config.journal.segment_size_bytes = 1024 * 1024 - 1;  // Just under 1 MB
+    config.journal.segment_size_bytes = 1024 * 1024 - 1; // Just under 1 MB
     EXPECT_EQ(config.validate(), Status::kInvalidConfig);
 }
 
 TEST(ConfigTest, Validate_SegmentSizeExactlyOneMB_IsValid) {
     Config config = Config::default_test_config();
-    config.journal.segment_size_bytes = 1024 * 1024;  // Exactly 1 MB
+    config.journal.segment_size_bytes = 1024 * 1024; // Exactly 1 MB
     EXPECT_TRUE(is_ok(config.validate()));
 }
 

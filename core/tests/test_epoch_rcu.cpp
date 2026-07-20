@@ -3,8 +3,8 @@
 
 #include "ume/concurrency/epoch_rcu.h"
 
-#include <gtest/gtest.h>
 #include <atomic>
+#include <gtest/gtest.h>
 #include <thread>
 #include <vector>
 
@@ -74,9 +74,7 @@ TEST(EpochRcuTest, MultiThreadedRcuStress) {
     std::thread writer([&rcu, &running, &retire_count, &delete_count]() {
         while (running.load(std::memory_order_relaxed)) {
             retire_count.fetch_add(1, std::memory_order_relaxed);
-            rcu.retire([&delete_count]() {
-                delete_count.fetch_add(1, std::memory_order_relaxed);
-            });
+            rcu.retire([&delete_count]() { delete_count.fetch_add(1, std::memory_order_relaxed); });
             rcu.reclaim();
             std::this_thread::sleep_for(std::chrono::microseconds(100));
         }
@@ -85,7 +83,8 @@ TEST(EpochRcuTest, MultiThreadedRcuStress) {
     std::this_thread::sleep_for(std::chrono::milliseconds(kDurationMs));
     running.store(false, std::memory_order_release);
 
-    for (auto& t : readers) t.join();
+    for (auto& t : readers)
+        t.join();
     writer.join();
 
     // Final reclaim sweep

@@ -2,6 +2,7 @@
 /// @brief Implementation of cross-platform thread management.
 
 #include "ume/platform/thread.h"
+
 #include "ume/platform/platform.h"
 
 #include <thread>
@@ -22,7 +23,8 @@
 namespace ume::platform {
 
 Status set_current_thread_name(const char* name) noexcept {
-    if (!name) return Status::kInvalidArgument;
+    if (!name)
+        return Status::kInvalidArgument;
 
 #if defined(UME_PLATFORM_WINDOWS)
     wchar_t wname[64];
@@ -66,11 +68,21 @@ Status set_current_thread_priority(ThreadPriority priority) noexcept {
 #if defined(UME_PLATFORM_WINDOWS)
     int win_prio = THREAD_PRIORITY_NORMAL;
     switch (priority) {
-        case ThreadPriority::kIdle: win_prio = THREAD_PRIORITY_IDLE; break;
-        case ThreadPriority::kLow: win_prio = THREAD_PRIORITY_BELOW_NORMAL; break;
-        case ThreadPriority::kNormal: win_prio = THREAD_PRIORITY_NORMAL; break;
-        case ThreadPriority::kHigh: win_prio = THREAD_PRIORITY_ABOVE_NORMAL; break;
-        case ThreadPriority::kRealtime: win_prio = THREAD_PRIORITY_TIME_CRITICAL; break;
+        case ThreadPriority::kIdle:
+            win_prio = THREAD_PRIORITY_IDLE;
+            break;
+        case ThreadPriority::kLow:
+            win_prio = THREAD_PRIORITY_BELOW_NORMAL;
+            break;
+        case ThreadPriority::kNormal:
+            win_prio = THREAD_PRIORITY_NORMAL;
+            break;
+        case ThreadPriority::kHigh:
+            win_prio = THREAD_PRIORITY_ABOVE_NORMAL;
+            break;
+        case ThreadPriority::kRealtime:
+            win_prio = THREAD_PRIORITY_TIME_CRITICAL;
+            break;
     }
     BOOL ok = SetThreadPriority(GetCurrentThread(), win_prio);
     return ok ? Status::kOk : Status::kInternalError;

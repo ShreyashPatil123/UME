@@ -34,7 +34,8 @@
 #elif defined(__clang__)
     #define UME_COMPILER_CLANG 1
     #define UME_COMPILER_NAME "Clang"
-    #define UME_COMPILER_VERSION (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__)
+    #define UME_COMPILER_VERSION \
+        (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__)
 #elif defined(__GNUC__)
     #define UME_COMPILER_GCC 1
     #define UME_COMPILER_NAME "GCC"
@@ -121,13 +122,13 @@
     #include <cstdio>
     #include <cstdlib>
     // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-    #define UME_ASSERT(condition, msg)                                                     \
-        do {                                                                                \
-            if (UME_UNLIKELY(!(condition))) {                                               \
-                std::fprintf(stderr, "UME_ASSERT failed: %s\n  at %s:%d\n  %s\n",          \
-                             #condition, __FILE__, __LINE__, (msg));                         \
-                std::abort();                                                               \
-            }                                                                               \
+    #define UME_ASSERT(condition, msg)                                                        \
+        do {                                                                                  \
+            if (UME_UNLIKELY(!(condition))) {                                                 \
+                std::fprintf(stderr, "UME_ASSERT failed: %s\n  at %s:%d\n  %s\n", #condition, \
+                             __FILE__, __LINE__, (msg));                                      \
+                std::abort();                                                                 \
+            }                                                                                 \
         } while (false)
 #else
     // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)

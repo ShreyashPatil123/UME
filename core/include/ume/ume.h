@@ -8,7 +8,7 @@
 ///
 /// @code
 ///     #include <ume/ume.h>
-///     
+///
 ///     int main() {
 ///         auto config = ume::Config::default_test_config();
 ///         // ... engine lifecycle
@@ -19,10 +19,10 @@
 #include "ume/version.h"
 
 // Foundation
-#include "ume/types.h"
-#include "ume/status.h"
 #include "ume/config.h"
+#include "ume/status.h"
+#include "ume/types.h"
 
 // Platform
-#include "ume/platform/platform.h"
 #include "ume/platform/clock.h"
+#include "ume/platform/platform.h"

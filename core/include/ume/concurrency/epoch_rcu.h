@@ -29,16 +29,16 @@ constexpr size_t kMaxRcuThreads = 64;
 
 /// @brief State of a registered reader thread slot.
 struct alignas(UME_CACHE_LINE_SIZE) ThreadEpochSlot {
-    std::atomic<uint64_t> epoch{0};      ///< Current epoch read by thread (0 = inactive)
-    std::atomic<bool> active{false};     ///< True if thread is currently reading
+    std::atomic<uint64_t> epoch{0};         ///< Current epoch read by thread (0 = inactive)
+    std::atomic<bool> active{false};        ///< True if thread is currently reading
     std::atomic<uint64_t> entry_time_ns{0}; ///< Entry timestamp for timeout detection
-    std::atomic<uint32_t> thread_id{0};  ///< OS thread ID
+    std::atomic<uint32_t> thread_id{0};     ///< OS thread ID
 };
 
 /// @brief Pending deletion record.
 struct DeferredDeletion {
-    uint64_t epoch;                      ///< Epoch when item was retired
-    std::function<void()> deleter;      ///< Cleanup callback
+    uint64_t epoch;                ///< Epoch when item was retired
+    std::function<void()> deleter; ///< Cleanup callback
 };
 
 /// @brief Epoch-Based Reclamation Manager.
@@ -46,13 +46,13 @@ struct DeferredDeletion {
 /// Usage:
 /// @code
 ///     EpochRcu rcu;
-///     
+///
 ///     // Reader thread:
 ///     {
 ///         EpochGuard guard(rcu);
 ///         // Read RCU-protected pointer safely
 ///     }
-///     
+///
 ///     // Writer thread:
 ///     rcu.retire([]() { delete old_node; });
 ///     rcu.synchronize(); // Or call reclaim() periodically
@@ -117,14 +117,11 @@ class EpochGuard {
 public:
     /// @brief Enter RCU read critical section.
     /// @param rcu Reference to EpochRcu instance.
-    explicit EpochGuard(EpochRcu& rcu) noexcept
-        : rcu_(rcu), slot_index_(rcu.register_thread()) {
+    explicit EpochGuard(EpochRcu& rcu) noexcept : rcu_(rcu), slot_index_(rcu.register_thread()) {
         rcu_.enter(slot_index_);
     }
 
-    ~EpochGuard() noexcept {
-        rcu_.exit(slot_index_);
-    }
+    ~EpochGuard() noexcept { rcu_.exit(slot_index_); }
 
     // Non-copyable, non-movable
     EpochGuard(const EpochGuard&) = delete;

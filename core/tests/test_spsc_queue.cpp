@@ -3,8 +3,8 @@
 
 #include "ume/concurrency/spsc_queue.h"
 
-#include <gtest/gtest.h>
 #include <atomic>
+#include <gtest/gtest.h>
 #include <thread>
 
 namespace ume::concurrency {

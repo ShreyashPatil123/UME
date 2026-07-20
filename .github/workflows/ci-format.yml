@@ -2,9 +2,9 @@ name: 'Format Check'
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
   check-format:
@@ -17,4 +17,4 @@ jobs:
           sudo apt-get install -y clang-format-17
       - name: Run clang-format check
         run: |
-          find core runtime drivers plugins simulator telemetry benchmarks tests examples tools -type f \( -name '*.h' -o -name '*.cpp' -o -name '*.c' \) | xargs -r clang-format-17 --dry-run --Werror
+          find core -type f \( -name '*.h' -o -name '*.cpp' -o -name '*.c' \) | xargs -r clang-format-17 --dry-run --Werror

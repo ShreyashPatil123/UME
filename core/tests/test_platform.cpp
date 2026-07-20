@@ -49,7 +49,7 @@ TEST(PlatformTest, ClockElapsedNsWorksCorrectly) {
 }
 
 TEST(PlatformTest, ClockConversions) {
-    Timestamp t{2'000'000'000ULL};  // 2 seconds in ns
+    Timestamp t{2'000'000'000ULL}; // 2 seconds in ns
 
     EXPECT_EQ(to_us(t), 2'000'000ULL);
     EXPECT_EQ(to_ms(t), 2'000ULL);

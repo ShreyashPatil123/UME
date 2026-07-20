@@ -2,6 +2,7 @@
 /// @brief Implementation of memory-mapped file abstraction.
 
 #include "ume/platform/mmap.h"
+
 #include "ume/platform/platform.h"
 
 #include <utility>
@@ -27,8 +28,7 @@ MmapFile::~MmapFile() {
     close();
 }
 
-MmapFile::MmapFile(MmapFile&& other) noexcept
-    : data_(other.data_), size_(other.size_) {
+MmapFile::MmapFile(MmapFile&& other) noexcept : data_(other.data_), size_(other.size_) {
     other.data_ = nullptr;
     other.size_ = 0;
 #if defined(UME_PLATFORM_WINDOWS)
@@ -66,14 +66,9 @@ Status MmapFile::open_read_write(const std::string& path, uint64_t initial_size_
     close();
 
 #if defined(UME_PLATFORM_WINDOWS)
-    HANDLE hFile = CreateFileA(
-        path.c_str(),
-        GENERIC_READ | GENERIC_WRITE,
-        FILE_SHARE_READ | FILE_SHARE_WRITE,
-        NULL,
-        OPEN_ALWAYS,
-        FILE_ATTRIBUTE_NORMAL,
-        NULL);
+    HANDLE hFile =
+        CreateFileA(path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+                    NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (hFile == INVALID_HANDLE_VALUE) {
         return Status::kFileNotFound;
@@ -82,20 +77,16 @@ Status MmapFile::open_read_write(const std::string& path, uint64_t initial_size_
     LARGE_INTEGER size_li;
     size_li.QuadPart = static_cast<LONGLONG>(initial_size_bytes);
 
-    HANDLE hMapping = CreateFileMappingA(
-        hFile,
-        NULL,
-        PAGE_READWRITE,
-        size_li.HighPart,
-        size_li.LowPart,
-        NULL);
+    HANDLE hMapping =
+        CreateFileMappingA(hFile, NULL, PAGE_READWRITE, size_li.HighPart, size_li.LowPart, NULL);
 
     if (hMapping == NULL) {
         CloseHandle(hFile);
         return Status::kIoError;
     }
 
-    void* ptr = MapViewOfFile(hMapping, FILE_MAP_ALL_ACCESS, 0, 0, static_cast<SIZE_T>(initial_size_bytes));
+    void* ptr =
+        MapViewOfFile(hMapping, FILE_MAP_ALL_ACCESS, 0, 0, static_cast<SIZE_T>(initial_size_bytes));
     if (ptr == NULL) {
         CloseHandle(hMapping);
         CloseHandle(hFile);
@@ -135,14 +126,8 @@ Status MmapFile::open_read_only(const std::string& path) noexcept {
     close();
 
 #if defined(UME_PLATFORM_WINDOWS)
-    HANDLE hFile = CreateFileA(
-        path.c_str(),
-        GENERIC_READ,
-        FILE_SHARE_READ,
-        NULL,
-        OPEN_EXISTING,
-        FILE_ATTRIBUTE_NORMAL,
-        NULL);
+    HANDLE hFile = CreateFileA(path.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
+                               FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (hFile == INVALID_HANDLE_VALUE) {
         return Status::kFileNotFound;
@@ -154,12 +139,7 @@ Status MmapFile::open_read_only(const std::string& path) noexcept {
         return Status::kIoError;
     }
 
-    HANDLE hMapping = CreateFileMappingA(
-        hFile,
-        NULL,
-        PAGE_READONLY,
-        0, 0,
-        NULL);
+    HANDLE hMapping = CreateFileMappingA(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
 
     if (hMapping == NULL) {
         CloseHandle(hFile);
@@ -205,7 +185,8 @@ Status MmapFile::open_read_only(const std::string& path) noexcept {
 }
 
 Status MmapFile::flush() noexcept {
-    if (!data_) return Status::kOk;
+    if (!data_)
+        return Status::kOk;
 
 #if defined(UME_PLATFORM_WINDOWS)
     BOOL ok = FlushViewOfFile(data_, static_cast<SIZE_T>(size_));
@@ -217,17 +198,21 @@ Status MmapFile::flush() noexcept {
 }
 
 void MmapFile::close() noexcept {
-    if (!data_) return;
+    if (!data_)
+        return;
 
 #if defined(UME_PLATFORM_WINDOWS)
     UnmapViewOfFile(data_);
-    if (mapping_handle_) CloseHandle(mapping_handle_);
-    if (file_handle_) CloseHandle(file_handle_);
+    if (mapping_handle_)
+        CloseHandle(mapping_handle_);
+    if (file_handle_)
+        CloseHandle(file_handle_);
     mapping_handle_ = nullptr;
     file_handle_ = nullptr;
 #else
     ::munmap(data_, size_);
-    if (fd_ >= 0) ::close(fd_);
+    if (fd_ >= 0)
+        ::close(fd_);
     fd_ = -1;
 #endif
 

@@ -9,7 +9,7 @@
 #include <utility>
 
 #ifndef UME_CACHE_LINE_SIZE
-#define UME_CACHE_LINE_SIZE 64
+    #define UME_CACHE_LINE_SIZE 64
 #endif
 
 namespace ume::concurrency {
@@ -23,8 +23,7 @@ class LockFreeSpscQueue {
     static_assert((Capacity & (Capacity - 1)) == 0, "Capacity must be a power of two");
 
 public:
-    LockFreeSpscQueue() noexcept 
-        : head_(0), cached_tail_(0), tail_(0), cached_head_(0) {}
+    LockFreeSpscQueue() noexcept : head_(0), cached_tail_(0), tail_(0), cached_head_(0) {}
 
     ~LockFreeSpscQueue() = default;
 
@@ -33,14 +32,14 @@ public:
 
     bool push(const T& item) noexcept(std::is_nothrow_copy_assignable_v<T>) {
         std::size_t head = head_.load(std::memory_order_relaxed);
-        
+
         if (head - cached_tail_ >= Capacity) {
             cached_tail_ = tail_.load(std::memory_order_acquire);
             if (head - cached_tail_ >= Capacity) {
                 return false; // Queue is full
             }
         }
-        
+
         buffer_[head & kMask] = item;
         head_.store(head + 1, std::memory_order_release);
         return true;
@@ -48,14 +47,14 @@ public:
 
     bool push(T&& item) noexcept(std::is_nothrow_move_assignable_v<T>) {
         std::size_t head = head_.load(std::memory_order_relaxed);
-        
+
         if (head - cached_tail_ >= Capacity) {
             cached_tail_ = tail_.load(std::memory_order_acquire);
             if (head - cached_tail_ >= Capacity) {
                 return false; // Queue is full
             }
         }
-        
+
         buffer_[head & kMask] = std::move(item);
         head_.store(head + 1, std::memory_order_release);
         return true;
@@ -63,14 +62,14 @@ public:
 
     bool pop(T& out_item) noexcept(std::is_nothrow_move_assignable_v<T>) {
         std::size_t tail = tail_.load(std::memory_order_relaxed);
-        
+
         if (cached_head_ == tail) {
             cached_head_ = head_.load(std::memory_order_acquire);
             if (cached_head_ == tail) {
                 return false; // Queue is empty
             }
         }
-        
+
         out_item = std::move(buffer_[tail & kMask]);
         tail_.store(tail + 1, std::memory_order_release);
         return true;
@@ -78,21 +77,17 @@ public:
 
     const T* front() const noexcept {
         std::size_t tail = tail_.load(std::memory_order_relaxed);
-        
+
         if (tail == head_.load(std::memory_order_acquire)) {
             return nullptr; // Queue is empty
         }
-        
+
         return &buffer_[tail & kMask];
     }
 
-    std::size_t capacity() const noexcept {
-        return Capacity;
-    }
+    std::size_t capacity() const noexcept { return Capacity; }
 
-    bool empty() const noexcept {
-        return approx_size() == 0;
-    }
+    bool empty() const noexcept { return approx_size() == 0; }
 
     std::size_t approx_size() const noexcept {
         std::size_t h = head_.load(std::memory_order_acquire);
@@ -105,10 +100,10 @@ private:
 
     alignas(UME_CACHE_LINE_SIZE) std::atomic<std::size_t> head_;
     alignas(UME_CACHE_LINE_SIZE) std::size_t cached_tail_;
-    
+
     alignas(UME_CACHE_LINE_SIZE) std::atomic<std::size_t> tail_;
     alignas(UME_CACHE_LINE_SIZE) std::size_t cached_head_;
-    
+
     T buffer_[Capacity];
 };
 

@@ -3,8 +3,8 @@
 
 #include "ume/concurrency/mpsc_queue.h"
 
-#include <gtest/gtest.h>
 #include <atomic>
+#include <gtest/gtest.h>
 #include <thread>
 #include <vector>
 
@@ -57,7 +57,8 @@ TEST(MpscQueueTest, ConcurrentMultiProducerSingleConsumer) {
     std::vector<std::thread> producers;
     for (size_t p = 0; p < kNumProducers; ++p) {
         producers.emplace_back([&queue, &start_signal, p]() {
-            while (!start_signal.load(std::memory_order_relaxed)) {}
+            while (!start_signal.load(std::memory_order_relaxed)) {
+            }
             for (size_t i = 0; i < kItemsPerProducer; ++i) {
                 size_t val = p * kItemsPerProducer + i + 1;
                 while (!queue.enqueue(val)) {

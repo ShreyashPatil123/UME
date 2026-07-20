@@ -31,9 +31,7 @@ struct alignas(UME_CACHE_LINE_SIZE) HazardSlot {
 class HazardPointerDomain {
 public:
     HazardPointerDomain() noexcept = default;
-    ~HazardPointerDomain() {
-        reclaim_all();
-    }
+    ~HazardPointerDomain() { reclaim_all(); }
 
     // Non-copyable, non-movable
     HazardPointerDomain(const HazardPointerDomain&) = delete;
@@ -43,7 +41,8 @@ public:
     [[nodiscard]] size_t acquire_slot() noexcept {
         for (size_t i = 0; i < kMaxHazardSlots; ++i) {
             bool expected = false;
-            if (slots_[i].active.compare_exchange_strong(expected, true, std::memory_order_relaxed)) {
+            if (slots_[i].active.compare_exchange_strong(expected, true,
+                                                         std::memory_order_relaxed)) {
                 return i;
             }
         }
@@ -76,14 +75,16 @@ public:
     /// @param ptr Pointer to node.
     /// @param deleter Function to free node memory.
     void retire(const void* ptr, std::function<void(const void*)> deleter) {
-        if (!ptr || !deleter) return;
+        if (!ptr || !deleter)
+            return;
         retired_.push_back({ptr, std::move(deleter)});
         reclaim();
     }
 
     /// @brief Reclaim all retired pointers not protected by any active hazard pointer.
     size_t reclaim() noexcept {
-        if (retired_.empty()) return 0;
+        if (retired_.empty())
+            return 0;
 
         // Collect all currently published hazard pointers
         std::vector<const void*> protected_ptrs;

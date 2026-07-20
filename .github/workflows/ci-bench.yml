@@ -2,7 +2,9 @@ name: 'Benchmarks'
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
 
 jobs:
   benchmark:
@@ -10,22 +12,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-17 ninja-build cmake
 
       - name: Configure CMake
-        run: >
-          cmake -B build
-          -G Ninja
-          -DCMAKE_C_COMPILER=clang-17
-          -DCMAKE_CXX_COMPILER=clang++-17
-          -DCMAKE_BUILD_TYPE=Release
-          -DUME_BUILD_BENCHMARKS=ON
+        run: |
+          cmake -B build \
+            -G Ninja \
+            -DCMAKE_C_COMPILER=clang-17 \
+            -DCMAKE_CXX_COMPILER=clang++-17 \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUME_BUILD_TESTS=OFF \
+            -DUME_BUILD_BENCHMARKS=ON
 
       - name: Build Benchmarks
         run: cmake --build build --target ume_benchmarks --parallel

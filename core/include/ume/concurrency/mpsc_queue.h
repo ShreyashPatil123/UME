@@ -7,12 +7,13 @@
 #include <utility>
 
 #ifndef UME_CACHE_LINE_SIZE
-#define UME_CACHE_LINE_SIZE 64
+    #define UME_CACHE_LINE_SIZE 64
 #endif
 
 namespace ume::concurrency {
 
-/// @brief A bounded multi-producer, single-consumer (MPSC) lock-free queue based on Dmitry Vyukov's design.
+/// @brief A bounded multi-producer, single-consumer (MPSC) lock-free queue based on Dmitry Vyukov's
+/// design.
 /// @tparam T The type of elements held in the queue.
 /// @tparam Capacity The maximum number of elements the queue can hold (must be a power of two).
 template <typename T, std::size_t Capacity>
@@ -48,7 +49,8 @@ public:
             std::intptr_t diff = static_cast<std::intptr_t>(seq) - static_cast<std::intptr_t>(pos);
 
             if (diff == 0) {
-                if (enqueue_cursor_.compare_exchange_weak(pos, pos + 1, std::memory_order_relaxed)) {
+                if (enqueue_cursor_.compare_exchange_weak(pos, pos + 1,
+                                                          std::memory_order_relaxed)) {
                     break;
                 }
             } else if (diff < 0) {
@@ -75,7 +77,8 @@ public:
             std::intptr_t diff = static_cast<std::intptr_t>(seq) - static_cast<std::intptr_t>(pos);
 
             if (diff == 0) {
-                if (enqueue_cursor_.compare_exchange_weak(pos, pos + 1, std::memory_order_relaxed)) {
+                if (enqueue_cursor_.compare_exchange_weak(pos, pos + 1,
+                                                          std::memory_order_relaxed)) {
                     break;
                 }
             } else if (diff < 0) {
@@ -111,15 +114,11 @@ public:
 
     /// @brief Returns the maximum capacity of the queue.
     /// @return The capacity of the queue.
-    std::size_t capacity() const noexcept {
-        return Capacity;
-    }
+    std::size_t capacity() const noexcept { return Capacity; }
 
     /// @brief Checks if the queue is currently empty.
     /// @return True if the queue is empty, false otherwise.
-    bool empty() const noexcept {
-        return approx_size() == 0;
-    }
+    bool empty() const noexcept { return approx_size() == 0; }
 
     /// @brief Returns the approximate number of elements in the queue.
     /// @return The approximate size of the queue.

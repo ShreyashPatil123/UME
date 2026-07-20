@@ -2,6 +2,7 @@
 /// @brief Implementation of cross-platform dynamic library loader.
 
 #include "ume/platform/dynamic_library.h"
+
 #include "ume/platform/platform.h"
 
 #include <utility>
@@ -24,8 +25,7 @@ DynamicLibrary::~DynamicLibrary() {
     close();
 }
 
-DynamicLibrary::DynamicLibrary(DynamicLibrary&& other) noexcept
-    : handle_(other.handle_) {
+DynamicLibrary::DynamicLibrary(DynamicLibrary&& other) noexcept : handle_(other.handle_) {
     other.handle_ = nullptr;
 }
 
@@ -59,7 +59,8 @@ Result<DynamicLibrary> DynamicLibrary::open(const std::string& path) noexcept {
 }
 
 void* DynamicLibrary::get_symbol_raw(const char* symbol_name) const noexcept {
-    if (!handle_ || !symbol_name) return nullptr;
+    if (!handle_ || !symbol_name)
+        return nullptr;
 
 #if defined(UME_PLATFORM_WINDOWS)
     FARPROC proc = GetProcAddress(reinterpret_cast<HMODULE>(handle_), symbol_name);
@@ -70,7 +71,8 @@ void* DynamicLibrary::get_symbol_raw(const char* symbol_name) const noexcept {
 }
 
 void DynamicLibrary::close() noexcept {
-    if (!handle_) return;
+    if (!handle_)
+        return;
 
 #if defined(UME_PLATFORM_WINDOWS)
     FreeLibrary(reinterpret_cast<HMODULE>(handle_));

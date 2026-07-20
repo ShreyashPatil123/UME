@@ -3,8 +3,8 @@
 
 #include "ume/platform/mmap.h"
 
-#include <gtest/gtest.h>
 #include <cstdio>
+#include <gtest/gtest.h>
 
 namespace ume::platform {
 namespace {

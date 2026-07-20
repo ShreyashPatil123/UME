@@ -47,13 +47,12 @@ namespace ume::platform {
 #if defined(UME_PLATFORM_LINUX) || defined(UME_PLATFORM_MACOS)
     struct timespec ts{};
     #if defined(CLOCK_MONOTONIC_RAW)
-        clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
     #else
-        clock_gettime(CLOCK_MONOTONIC, &ts);
+    clock_gettime(CLOCK_MONOTONIC, &ts);
     #endif
-    return static_cast<Timestamp>(
-        static_cast<uint64_t>(ts.tv_sec) * 1'000'000'000ULL +
-        static_cast<uint64_t>(ts.tv_nsec));
+    return static_cast<Timestamp>(static_cast<uint64_t>(ts.tv_sec) * 1'000'000'000ULL +
+                                  static_cast<uint64_t>(ts.tv_nsec));
 #elif defined(UME_PLATFORM_WINDOWS)
     static const uint64_t frequency = []() -> uint64_t {
         LARGE_INTEGER freq{};
@@ -67,9 +66,8 @@ namespace ume::platform {
     const uint64_t count = static_cast<uint64_t>(counter.QuadPart);
     const uint64_t whole_seconds = count / frequency;
     const uint64_t remainder = count % frequency;
-    return static_cast<Timestamp>(
-        whole_seconds * 1'000'000'000ULL +
-        (remainder * 1'000'000'000ULL) / frequency);
+    return static_cast<Timestamp>(whole_seconds * 1'000'000'000ULL +
+                                  (remainder * 1'000'000'000ULL) / frequency);
 #endif
 }
 

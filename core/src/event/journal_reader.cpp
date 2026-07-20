@@ -94,7 +94,7 @@ Result<void> JournalReader::read_next(Event& out_event) noexcept {
         constexpr size_t record_min_size = sizeof(JournalRecordHeader) + sizeof(Event);
 
         if (current_offset_ + record_min_size > total_mapped_size) {
-            // End of current segment, try loading next segment
+            // End of current segment mapped file, try loading next segment
             current_segment_index_++;
             const auto load_res = load_current_segment();
             if (load_res.ok()) {
@@ -107,6 +107,17 @@ Result<void> JournalReader::read_next(Event& out_event) noexcept {
         const uint8_t* record_ptr = current_mmap_.data() + current_offset_;
         JournalRecordHeader record_hdr{};
         std::memcpy(&record_hdr, record_ptr, sizeof(JournalRecordHeader));
+
+        // Detect unwritten zero padding at the end of preallocated segment file
+        if (record_hdr.magic == 0 && record_hdr.record_size == 0) {
+            current_segment_index_++;
+            const auto load_res = load_current_segment();
+            if (load_res.ok()) {
+                continue;
+            } else {
+                return Status::kNotFound; // End of journal
+            }
+        }
 
         // Validate Record Magic
         if (record_hdr.magic != 0x52454344) { // "RECD"

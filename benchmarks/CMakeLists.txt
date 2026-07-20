@@ -7,6 +7,7 @@ if(UME_BUILD_BENCHMARKS)
         bench_epoch_rcu.cpp
         bench_string_interner.cpp
         bench_journal_writer.cpp
+        bench_replay_dispatcher.cpp
     )
 
     target_link_libraries(ume_benchmarks

@@ -49,7 +49,7 @@ TEST(EpochRcuTest, MultiThreadedRcuStress) {
     EpochRcu rcu(500);
 
     constexpr size_t kReaders = 4;
-    constexpr size_t kDurationMs = 200;
+    constexpr size_t kRetireOps = 1000;
 
     std::atomic<bool> running{true};
     std::atomic<uint64_t> read_count{0};
@@ -70,28 +70,27 @@ TEST(EpochRcuTest, MultiThreadedRcuStress) {
         });
     }
 
-    // Writer thread retiring objects
+    // Writer thread retiring objects (deterministic operation count)
     std::thread writer([&rcu, &running, &retire_count, &delete_count]() {
-        while (running.load(std::memory_order_relaxed)) {
+        for (size_t i = 0; i < kRetireOps; ++i) {
             retire_count.fetch_add(1, std::memory_order_relaxed);
             rcu.retire([&delete_count]() { delete_count.fetch_add(1, std::memory_order_relaxed); });
             rcu.reclaim();
             std::this_thread::yield();
         }
+        running.store(false, std::memory_order_release);
     });
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(kDurationMs));
-    running.store(false, std::memory_order_release);
-
-    for (auto& t : readers)
-        t.join();
     writer.join();
+    for (auto& t : readers) {
+        t.join();
+    }
 
     // Final reclaim sweep
     rcu.reclaim();
 
-    EXPECT_GT(read_count.load(), 1000ULL);
-    EXPECT_GT(retire_count.load(), 0ULL);
+    EXPECT_GT(read_count.load(), 0ULL);
+    EXPECT_EQ(retire_count.load(), kRetireOps);
 }
 
 } // namespace

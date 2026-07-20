@@ -15,7 +15,9 @@ TEST(PredictionEngineTest, HybridPredictorChoice) {
     ObjectId obj{10};
     learning.learn_access(obj, 0x1000);
     learning.learn_access(obj, 0x2000);
-    learning.learn_access(obj, 0x3000); // warm stride, confidence increases
+    learning.learn_access(obj, 0x3000);
+    learning.learn_access(obj, 0x4000);
+    learning.learn_access(obj, 0x5000); // warm stride, confidence increases to 0.8
 
     auto pred_res = engine.get_prediction(obj);
     ASSERT_TRUE(pred_res.ok());

@@ -64,6 +64,8 @@ TEST_F(UmeM6PipelineIntegrationTest, EndToEndM6Pipeline) {
     learning.learn_access(obj, 0x1000);
     learning.learn_access(obj, 0x2000);
     learning.learn_access(obj, 0x3000);
+    learning.learn_access(obj, 0x4000);
+    learning.learn_access(obj, 0x5000);
 
     // Verify pattern database captured the sequential stride
     auto pattern_res = learning.get_pattern(obj);

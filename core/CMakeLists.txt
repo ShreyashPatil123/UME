@@ -18,7 +18,7 @@ target_sources(ume_core
         src/concurrency/epoch_rcu.cpp
         src/concurrency/string_interner.cpp
 
-        # Event & Journal & Analysis & Scheduling
+        # Event & Journal & Analysis & Scheduling & Optimization
         src/event/event_serializer.cpp
         src/event/journal_writer.cpp
         src/event/journal_reader.cpp
@@ -28,6 +28,8 @@ target_sources(ume_core
         src/event/event_analyzer.cpp
         src/event/memory_scheduler.cpp
         src/event/memory_placement.cpp
+        src/event/memory_optimizer.cpp
+        src/event/prefetch_engine.cpp
 )
 
 target_include_directories(ume_core
@@ -88,6 +90,9 @@ if(UME_BUILD_TESTS)
         tests/test_memory_scheduler.cpp
         tests/test_memory_placement.cpp
         tests/test_scheduler_pipeline_integration.cpp
+        tests/test_memory_optimizer.cpp
+        tests/test_prefetch_engine.cpp
+        tests/test_optimizer_prefetch_integration.cpp
     )
 
     target_link_libraries(ume_core_tests

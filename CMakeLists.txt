@@ -18,6 +18,10 @@ option(UME_ENABLE_SANITIZERS "Enable address and undefined behavior sanitizers" 
 option(UME_BUILD_PLUGINS "Build UME plugins" OFF)
 option(UME_BUILD_TELEMETRY "Build UME telemetry" OFF)
 
+if(UME_BUILD_TESTS)
+    enable_testing()
+endif()
+
 # Compiler Warnings
 function(ume_set_project_warnings project_name)
     set(MSVC_WARNINGS
@@ -90,13 +94,14 @@ endif()
 
 # Fetch benchmark if benchmarks enabled
 if(UME_BUILD_BENCHMARKS)
+    set(HAVE_STD_REGEX ON CACHE BOOL "" FORCE)
+    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+    set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
     FetchContent_Declare(
         googlebenchmark
         GIT_REPOSITORY https://github.com/google/benchmark.git
         GIT_TAG        v1.8.3
     )
-    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
-    set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googlebenchmark)
 endif()
 
@@ -191,7 +196,6 @@ if(UME_BUILD_TELEMETRY AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/telemetry)
 endif()
 
 if(UME_BUILD_TESTS AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/tests)
-    enable_testing()
     add_subdirectory(tests)
 endif()
 

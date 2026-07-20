@@ -8,8 +8,15 @@ target_sources(ume_core
         # Config
         src/config.cpp
 
-        # Platform (cross-platform selected at compile time via #ifdef)
+        # Platform
         src/platform/clock.cpp
+        src/platform/thread.cpp
+        src/platform/mmap.cpp
+        src/platform/dynamic_library.cpp
+
+        # Concurrency
+        src/concurrency/epoch_rcu.cpp
+        src/concurrency/string_interner.cpp
 )
 
 target_include_directories(ume_core
@@ -27,6 +34,8 @@ target_link_libraries(ume_core
 # Platform-specific link libraries
 if(WIN32)
     target_link_libraries(ume_core PRIVATE winmm)
+else()
+    target_link_libraries(ume_core PRIVATE dl pthread)
 endif()
 
 # Set compiler definitions
@@ -49,6 +58,14 @@ if(UME_BUILD_TESTS)
         tests/test_status.cpp
         tests/test_config.cpp
         tests/test_platform.cpp
+        tests/test_thread.cpp
+        tests/test_mmap.cpp
+        tests/test_dynamic_library.cpp
+        tests/test_mpsc_queue.cpp
+        tests/test_spsc_queue.cpp
+        tests/test_epoch_rcu.cpp
+        tests/test_hazard_pointers.cpp
+        tests/test_string_interner.cpp
     )
 
     target_link_libraries(ume_core_tests
@@ -58,10 +75,11 @@ if(UME_BUILD_TESTS)
             GTest::gtest_main
     )
 
-    include(GoogleTest)
-    gtest_discover_tests(ume_core_tests
+    add_test(NAME ume_core_tests COMMAND ume_core_tests)
+
+    add_custom_target(run_core_tests
+        COMMAND ume_core_tests
+        DEPENDS ume_core_tests
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        PROPERTIES
-            TIMEOUT 30
     )
 endif()

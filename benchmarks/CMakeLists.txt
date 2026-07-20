@@ -11,6 +11,7 @@ if(UME_BUILD_BENCHMARKS)
         bench_event_analysis.cpp
         bench_scheduler_placement.cpp
         bench_optimizer_prefetch.cpp
+        bench_m6_learning_prediction.cpp
     )
 
     target_link_libraries(ume_benchmarks

@@ -66,6 +66,7 @@ if(UME_BUILD_TESTS)
         tests/test_epoch_rcu.cpp
         tests/test_hazard_pointers.cpp
         tests/test_string_interner.cpp
+        tests/test_event.cpp
     )
 
     target_link_libraries(ume_core_tests

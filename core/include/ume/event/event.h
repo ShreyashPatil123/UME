@@ -89,6 +89,10 @@ struct alignas(64) Event {
         uint8_t raw[64];
 
         constexpr Payload() noexcept : raw{0} {}
+        explicit constexpr Payload(const ObjectEventPayload& obj) noexcept : object(obj) {}
+        explicit constexpr Payload(const MigrationEventPayload& mig) noexcept : migration(mig) {}
+        explicit constexpr Payload(const AccessEventPayload& acc) noexcept : access(acc) {}
+        explicit constexpr Payload(const SystemEventPayload& sys) noexcept : system(sys) {}
     } payload{};
 
     constexpr Event() noexcept = default;
@@ -108,7 +112,7 @@ struct alignas(64) Event {
         e.header.source_tier = tier;
         e.header.payload_size = sizeof(ObjectEventPayload);
 
-        e.payload.object = ObjectEventPayload{size, 0, TierClass::kRam, {0}};
+        e.payload = Payload(ObjectEventPayload{size, 0, TierClass::kRam, {0}});
         return e;
     }
 
@@ -129,7 +133,7 @@ struct alignas(64) Event {
         e.header.target_tier = tgt;
         e.header.payload_size = sizeof(MigrationEventPayload);
 
-        e.payload.migration = MigrationEventPayload{bytes, 0, 0, {0}};
+        e.payload = Payload(MigrationEventPayload{bytes, 0, 0, {0}});
         return e;
     }
 };

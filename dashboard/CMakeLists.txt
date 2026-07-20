@@ -1,6 +1,6 @@
 # dashboard/CMakeLists.txt
-# CMake configuration for UME Professional Desktop Dashboard (UI).
-# Part of UME Milestone M8 (Task T016).
+# CMake configuration for UME Real Engine Integrated Dashboard (UI).
+# Part of UME Milestone M9 (Task T017).
 
 cmake_minimum_required(VERSION 3.28)
 project(ume_dashboard LANGUAGES CXX)
@@ -17,7 +17,8 @@ add_executable(ume_dashboard
     src/viewmodel/memory_viewmodel.cpp
     src/viewmodel/advisor_viewmodel.cpp
     src/viewmodel/digital_twin_viewmodel.cpp
-    src/model/mock_backend.cpp
+    src/model/real_engine_adapter.cpp
+    src/model/http_telemetry_server.cpp
     resources.qrc
 )
 
@@ -30,6 +31,7 @@ target_include_directories(ume_dashboard
 
 target_link_libraries(ume_dashboard
     PRIVATE
+        ume_core
         ume_common
         Qt6::Core
         Qt6::Gui

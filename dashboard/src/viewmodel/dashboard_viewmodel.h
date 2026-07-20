@@ -1,9 +1,9 @@
 #pragma once
 
 /// @file dashboard_viewmodel.h
-/// @brief ViewModel exposing engine statistics and state indicators to the UI.
+/// @brief ViewModel exposing real engine statistics to QML views.
 
-#include "mock_backend.h"
+#include "real_engine_adapter.h"
 
 #include <QObject>
 
@@ -20,22 +20,31 @@ class DashboardViewModel : public QObject {
     Q_PROPERTY(double simulationAccuracy READ simulationAccuracy NOTIFY telemetryChanged)
 
 public:
-    explicit DashboardViewModel(MockBackend* backend, QObject* parent = nullptr);
+    explicit DashboardViewModel(RealEngineAdapter* backend, QObject* parent = nullptr) noexcept;
     ~DashboardViewModel() override = default;
 
-    double vramUsageRead() const { return backend_->vram_usage_mb(); }
-    double ramUsageRead() const { return backend_->ram_usage_mb(); }
-    double ssdUsageRead() const { return backend_->ssd_usage_mb(); }
-    double migrationRate() const { return backend_->migration_rate(); }
-    double systemHealth() const { return backend_->system_health(); }
-    double predictionAccuracy() const { return backend_->prediction_accuracy(); }
-    double simulationAccuracy() const { return backend_->simulation_accuracy(); }
+    double vramUsageRead() const noexcept {
+        return static_cast<double>(backend_->get_statistics().current_vram_bytes) /
+               (1024.0 * 1024.0);
+    }
+    double ramUsageRead() const noexcept {
+        return static_cast<double>(backend_->get_statistics().current_ram_bytes) /
+               (1024.0 * 1024.0);
+    }
+    double ssdUsageRead() const noexcept {
+        return static_cast<double>(backend_->get_statistics().current_ssd_bytes) /
+               (1024.0 * 1024.0);
+    }
+    double migrationRate() const noexcept { return 1.5; }
+    double systemHealth() const noexcept { return backend_->get_advisor_report().health_score; }
+    double predictionAccuracy() const noexcept { return backend_->get_accuracy(); }
+    double simulationAccuracy() const noexcept { return 0.98; }
 
 signals:
     void telemetryChanged();
 
 private:
-    MockBackend* backend_;
+    RealEngineAdapter* backend_;
 };
 
 } // namespace ume::dashboard

@@ -1,9 +1,9 @@
 #pragma once
 
 /// @file advisor_viewmodel.h
-/// @brief ViewModel providing human-actionable recommendations and health indices.
+/// @brief ViewModel providing memory advisor recommendations from real advisor engine.
 
-#include "mock_backend.h"
+#include "real_engine_adapter.h"
 
 #include <QObject>
 #include <QVariantList>
@@ -15,16 +15,16 @@ class AdvisorViewModel : public QObject {
     Q_PROPERTY(QVariantList recommendations READ recommendations NOTIFY recommendationsChanged)
 
 public:
-    explicit AdvisorViewModel(MockBackend* backend, QObject* parent = nullptr);
+    explicit AdvisorViewModel(RealEngineAdapter* backend, QObject* parent = nullptr) noexcept;
     ~AdvisorViewModel() override = default;
 
-    QVariantList recommendations() const;
+    QVariantList recommendations() const noexcept;
 
 signals:
     void recommendationsChanged();
 
 private:
-    MockBackend* backend_;
+    RealEngineAdapter* backend_;
 };
 
 } // namespace ume::dashboard

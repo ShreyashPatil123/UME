@@ -1,11 +1,12 @@
 /// @file main.cpp
-/// @brief Main entry point for the UME Professional Desktop Dashboard.
+/// @brief Main entry point for the UME Dashboard initialized with real engine telemetry.
 
 #include "advisor_viewmodel.h"
 #include "dashboard_viewmodel.h"
 #include "digital_twin_viewmodel.h"
+#include "http_telemetry_server.h"
 #include "memory_viewmodel.h"
-#include "mock_backend.h"
+#include "real_engine_adapter.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -19,14 +20,17 @@ int main(int argc, char* argv[]) {
 
     QQmlApplicationEngine engine;
 
-    // Instantiate models and viewmodels
-    ume::dashboard::MockBackend backend;
+    // Instantiate real UME engine adapter and lightweight REST HTTP telemetry server
+    ume::dashboard::RealEngineAdapter backend;
+    ume::dashboard::HttpTelemetryServer telemetry_server(&backend, 8082);
+
+    // Instantiate ViewModels linked to real engine adapter
     ume::dashboard::DashboardViewModel dashboard_vm(&backend);
     ume::dashboard::MemoryViewModel memory_vm(&backend);
     ume::dashboard::AdvisorViewModel advisor_vm(&backend);
     ume::dashboard::DigitalTwinViewModel digital_twin_vm(&backend);
 
-    // Register viewmodels into QML context
+    // Register ViewModels into QML context
     auto* ctx = engine.rootContext();
     ctx->setContextProperty("dashboardVM", &dashboard_vm);
     ctx->setContextProperty("memoryVM", &memory_vm);

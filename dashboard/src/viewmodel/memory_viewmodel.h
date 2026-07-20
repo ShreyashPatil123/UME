@@ -1,9 +1,9 @@
 #pragma once
 
 /// @file memory_viewmodel.h
-/// @brief ViewModel providing application memory profiles and active listings.
+/// @brief ViewModel providing application profiles mapped from real engine.
 
-#include "mock_backend.h"
+#include "real_engine_adapter.h"
 
 #include <QObject>
 #include <QVariantList>
@@ -15,16 +15,16 @@ class MemoryViewModel : public QObject {
     Q_PROPERTY(QVariantList applications READ applications NOTIFY appsChanged)
 
 public:
-    explicit MemoryViewModel(MockBackend* backend, QObject* parent = nullptr);
+    explicit MemoryViewModel(RealEngineAdapter* backend, QObject* parent = nullptr) noexcept;
     ~MemoryViewModel() override = default;
 
-    QVariantList applications() const;
+    QVariantList applications() const noexcept;
 
 signals:
     void appsChanged();
 
 private:
-    MockBackend* backend_;
+    RealEngineAdapter* backend_;
 };
 
 } // namespace ume::dashboard

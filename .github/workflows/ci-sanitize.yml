@@ -1,0 +1,48 @@
+name: 'Sanitizers'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  sanitize:
+    name: Sanitizer - ${{ matrix.sanitizer }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [asan, tsan, ubsan]
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-17 ninja-build cmake
+
+      - name: Configure CMake
+        run: >
+          cmake -B build
+          -G Ninja
+          -DCMAKE_C_COMPILER=clang-17
+          -DCMAKE_CXX_COMPILER=clang++-17
+          -DCMAKE_BUILD_TYPE=Debug
+          -DUME_BUILD_TESTS=ON
+          -DUSE_SANITIZER=${{ matrix.sanitizer }}
+
+      - name: Build Tests
+        run: cmake --build build --parallel
+
+      - name: Run Tests
+        working-directory: build
+        run: ctest --output-on-failure
+        env:
+          ASAN_OPTIONS: "detect_leaks=1:strict_string_checks=1"
+          TSAN_OPTIONS: "halt_on_error=1"
+          UBSAN_OPTIONS: "print_stacktrace=1"

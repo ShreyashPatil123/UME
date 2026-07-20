@@ -1,0 +1,64 @@
+name: 'Build'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: ${{ matrix.os }} - ${{ matrix.compiler }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            compiler: clang-17
+            c_compiler: clang-17
+            cxx_compiler: clang++-17
+          - os: ubuntu-24.04
+            compiler: gcc-13
+            c_compiler: gcc-13
+            cxx_compiler: g++-13
+          - os: windows-2022
+            compiler: msvc
+            c_compiler: cl
+            cxx_compiler: cl
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 'master'
+
+      - name: Install Ubuntu Dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build cmake ${{ matrix.compiler }}
+
+      - name: Configure CMake (Linux)
+        if: runner.os == 'Linux'
+        run: >
+          cmake -B build
+          -G Ninja
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cxx_compiler }}
+          -DCMAKE_BUILD_TYPE=Release
+          -DUME_BUILD_TESTS=OFF
+          -DUME_BUILD_BENCHMARKS=OFF
+
+      - name: Configure CMake (Windows)
+        if: runner.os == 'Windows'
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DUME_BUILD_TESTS=OFF
+          -DUME_BUILD_BENCHMARKS=OFF
+
+      - name: Build
+        run: cmake --build build --config Release --parallel

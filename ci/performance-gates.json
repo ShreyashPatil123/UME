@@ -1,0 +1,151 @@
+{
+    "version": 1,
+    "tolerance_latency": 0.10,
+    "tolerance_throughput": 0.15,
+    "gates": [
+        {
+            "id": "G01",
+            "name": "Journal append p50",
+            "metric": "journal_append_p50_ns",
+            "direction": "min",
+            "threshold": 200,
+            "unit": "ns"
+        },
+        {
+            "id": "G02",
+            "name": "Journal append p99",
+            "metric": "journal_append_p99_ns",
+            "direction": "min",
+            "threshold": 2000,
+            "unit": "ns"
+        },
+        {
+            "id": "G03",
+            "name": "Journal throughput",
+            "metric": "journal_throughput_eps",
+            "direction": "max",
+            "threshold": 5000000,
+            "unit": "events/sec"
+        },
+        {
+            "id": "G04",
+            "name": "Object Store insert",
+            "metric": "object_store_insert_ns",
+            "direction": "min",
+            "threshold": 500,
+            "unit": "ns"
+        },
+        {
+            "id": "G05",
+            "name": "Object Store lookup",
+            "metric": "object_store_lookup_ns",
+            "direction": "min",
+            "threshold": 100,
+            "unit": "ns"
+        },
+        {
+            "id": "G06",
+            "name": "Object Store concurrent read 8T",
+            "metric": "object_store_read_8t_ns",
+            "direction": "min",
+            "threshold": 150,
+            "unit": "ns"
+        },
+        {
+            "id": "G07",
+            "name": "Graph tier query",
+            "metric": "graph_tier_query_ns",
+            "direction": "min",
+            "threshold": 50,
+            "unit": "ns"
+        },
+        {
+            "id": "G08",
+            "name": "RCU read-side cost",
+            "metric": "rcu_read_ns",
+            "direction": "min",
+            "threshold": 15,
+            "unit": "ns"
+        },
+        {
+            "id": "G09",
+            "name": "MPSC enqueue 1P",
+            "metric": "mpsc_enqueue_1p_ns",
+            "direction": "min",
+            "threshold": 30,
+            "unit": "ns"
+        },
+        {
+            "id": "G10",
+            "name": "MPSC enqueue 8P",
+            "metric": "mpsc_enqueue_8p_ns",
+            "direction": "min",
+            "threshold": 100,
+            "unit": "ns"
+        },
+        {
+            "id": "G11",
+            "name": "Full pipeline E2E",
+            "metric": "pipeline_e2e_us",
+            "direction": "min",
+            "threshold": 5,
+            "unit": "us"
+        },
+        {
+            "id": "G12",
+            "name": "Cost model single eval",
+            "metric": "cost_model_single_ns",
+            "direction": "min",
+            "threshold": 500,
+            "unit": "ns"
+        },
+        {
+            "id": "G13",
+            "name": "Cost model batch 10K",
+            "metric": "cost_model_batch_10k_us",
+            "direction": "min",
+            "threshold": 2000,
+            "unit": "us"
+        },
+        {
+            "id": "G14",
+            "name": "Prediction cycle EWMA",
+            "metric": "prediction_ewma_us",
+            "direction": "min",
+            "threshold": 500,
+            "unit": "us"
+        },
+        {
+            "id": "G15",
+            "name": "FlatBuffers serialize",
+            "metric": "flatbuf_serialize_ns",
+            "direction": "min",
+            "threshold": 100,
+            "unit": "ns"
+        },
+        {
+            "id": "G16",
+            "name": "FlatBuffers deserialize",
+            "metric": "flatbuf_deserialize_ns",
+            "direction": "min",
+            "threshold": 80,
+            "unit": "ns"
+        },
+        {
+            "id": "G17",
+            "name": "Engine memory idle",
+            "metric": "engine_memory_idle_mb",
+            "direction": "min",
+            "threshold": 50,
+            "unit": "MB"
+        },
+        {
+            "id": "G18",
+            "name": "Engine CPU at 10K eps",
+            "metric": "engine_cpu_10k_percent",
+            "direction": "min",
+            "threshold": 5,
+            "unit": "%"
+        }
+    ]
+}

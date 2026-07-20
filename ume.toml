@@ -1,0 +1,42 @@
+# UME Engine Default Configuration
+
+[engine]
+log_level = "info"
+overhead_budget_cpu_percent = 5.0
+overhead_budget_memory_mb = 256
+
+[journal]
+segment_size_mb = 64
+hot_retention_seconds = 3600
+warm_retention_seconds = 86400
+compaction_enabled = true
+
+[object_store]
+shard_count = 16
+small_alloc_threshold_bytes = 4096
+tombstone_reap_interval_seconds = 60
+
+[graph]
+rcu_epoch_timeout_ms = 50
+
+[probes]
+sample_rate_hz = 100
+cuda_enabled = true
+nvml_enabled = true
+
+[adapters]
+python_gil_max_hold_us = 500
+python_batch_hz = 60
+
+[dashboard]
+websocket_port = 8080
+rest_port = 8081
+max_clients = 100
+
+[prediction]
+cycle_interval_ms = 100
+models_enabled = true
+
+[advisor]
+cycle_interval_ms = 1000
+enabled = true

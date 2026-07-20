@@ -1,0 +1,9 @@
+/core/                  @ume-core-team
+/runtime/               @ume-core-team
+/drivers/               @ume-drivers-team
+/plugins/               @ume-plugins-team
+/dashboard/             @ume-dashboard-team
+/docs/                  @ume-docs-team
+/ci/                    @ume-infra-team
+CMakeLists.txt          @ume-build-team
+/.github/workflows/     @ume-infra-team

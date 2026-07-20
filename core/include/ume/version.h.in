@@ -1,0 +1,15 @@
+#pragma once
+
+#define UME_VERSION_MAJOR @ume_VERSION_MAJOR@
+#define UME_VERSION_MINOR @ume_VERSION_MINOR@
+#define UME_VERSION_PATCH @ume_VERSION_PATCH@
+#define UME_VERSION_STRING "@ume_VERSION_MAJOR@.@ume_VERSION_MINOR@.@ume_VERSION_PATCH@"
+
+namespace ume {
+
+constexpr int kVersionMajor = UME_VERSION_MAJOR;
+constexpr int kVersionMinor = UME_VERSION_MINOR;
+constexpr int kVersionPatch = UME_VERSION_PATCH;
+constexpr const char* kVersionString = UME_VERSION_STRING;
+
+} // namespace ume

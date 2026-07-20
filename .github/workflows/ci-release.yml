@@ -1,0 +1,75 @@
+name: 'Release'
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2022]
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+
+      - name: Configure CMake (Linux)
+        if: runner.os == 'Linux'
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DUME_BUILD_TESTS=OFF
+          -DUME_BUILD_BENCHMARKS=OFF
+          
+      - name: Configure CMake (Windows)
+        if: runner.os == 'Windows'
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DUME_BUILD_TESTS=OFF
+          -DUME_BUILD_BENCHMARKS=OFF
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+        
+      - name: Archive build (Linux)
+        if: runner.os == 'Linux'
+        run: tar -czvf ume-linux.tar.gz -C build/bin .
+        
+      - name: Archive build (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path build\bin\* -DestinationPath ume-windows.zip
+        
+      - name: Upload Artifacts (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: ume-linux.tar.gz
+          
+      - name: Upload Artifacts (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: ume-windows.zip
+
+  create-release:
+    needs: build-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            linux-build/ume-linux.tar.gz
+            windows-build/ume-windows.zip
+          draft: false
+          prerelease: false

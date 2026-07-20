@@ -1,0 +1,21 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+    <file>qml/Main.qml</file>
+    <file>qml/Theme.qml</file>
+    <file>qml/DashboardPage.qml</file>
+    <file>qml/MemoryPage.qml</file>
+    <file>qml/ApplicationsPage.qml</file>
+    <file>qml/OptimizerPage.qml</file>
+    <file>qml/PrefetchPage.qml</file>
+    <file>qml/PatternLearningPage.qml</file>
+    <file>qml/PredictionPage.qml</file>
+    <file>qml/DigitalTwinPage.qml</file>
+    <file>qml/MemoryAdvisorPage.qml</file>
+    <file>qml/TimelinePage.qml</file>
+    <file>qml/StatisticsPage.qml</file>
+    <file>qml/PoliciesPage.qml</file>
+    <file>qml/LogsPage.qml</file>
+    <file>qml/SettingsPage.qml</file>
+    <file>qml/AboutPage.qml</file>
+</qresource>
+</RCC>

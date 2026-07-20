@@ -207,6 +207,10 @@ if(UME_BUILD_EXAMPLES AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/examples)
     add_subdirectory(examples)
 endif()
 
+if(UME_BUILD_DASHBOARD AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/dashboard)
+    add_subdirectory(dashboard)
+endif()
+
 # Installation
 include(GNUInstallDirs)
 
